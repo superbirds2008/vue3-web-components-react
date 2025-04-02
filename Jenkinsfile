@@ -6,7 +6,7 @@ pipeline {
         TEST_SERVER = 'your-test-server' // 替换为测试服务器地址
         GITHUB_TOKEN = credentials('wwwin-github-1') // GitHub 访问令牌 
         NPM_PROXY = 'http://proxy.esl.cisco.com:80' // 替换为实际的 npm 代理地址
-        GITHUB_REPO = 'https://wwwin-github.cisco.com/GX-GC-Automation-Dev-Team/cicd-poc' // 替换为实际的 GitHub 仓库地址
+        GITHUB_REPO = 'https://wwwin-github.cisco.com/api/v3/repos/GX-GC-Automation-Dev-Team/cicd-poc' // 替换为实际的 GitHub 仓库地址
     }
     stages {
         stage('Verify Git Tag') {
