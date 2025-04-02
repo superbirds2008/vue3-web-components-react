@@ -135,10 +135,10 @@ pipeline {
         //     }
         // }
     }
-    post {
-        always {
-            // 清理工作区
-            cleanWs()
-        }
-    }
+    // post {
+    //     always {
+    //         // 清理工作区
+    //         cleanWs()
+    //     }
+    // }
 }
