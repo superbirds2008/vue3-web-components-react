@@ -81,7 +81,7 @@ pipeline {
                         -H "Accept: application/vnd.github+json" \
                         -H "Authorization: Bearer ${GITHUB_TOKEN}" \
                         -H "Content-Type: application/gzip" \
-                        "https://wwwin-github.cisco.com//api/uploads/repos/OWNER/REPO/releases/RELEASE_ID/assets?name=vue-web-component-${GIT_TAG}.tar.gz" \
+                        "https://wwwin-github.cisco.com/api/uploads/repos/GX-GC-Automation-Dev-Team/cicd-poc/releases/${releaseId}/assets?name=vue-web-component-${GIT_TAG}.tar.gz" \
                         --data-binary "@release/vue-web-component-${GIT_TAG}.tar.gz"
                     """
                 }
