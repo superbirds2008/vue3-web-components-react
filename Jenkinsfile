@@ -68,11 +68,11 @@ pipeline {
                     """
 
                     // 获取 Release ID
-                    def releaseId = sh(script: """
-                    curl -H "Authorization: token ${GITHUB_TOKEN}" \
-                         -H "Content-Type: application/json" \
-                         ${GITHUB_REPO}/releases/tags/${GIT_TAG} | jq -r '.id'
-                    """, returnStdout: true).trim()
+                    // def releaseId = sh(script: """
+                    // curl -H "Authorization: token ${GITHUB_TOKEN}" \
+                    //      -H "Content-Type: application/json" \
+                    //      ${GITHUB_REPO}/releases/tags/${GIT_TAG} | jq -r '.id'
+                    // """, returnStdout: true).trim()
 
                     // 上传文件到 Release
                     // sh """
