@@ -47,6 +47,7 @@ pipeline {
                 script {
                     unstash 'vue-release'
                     // 创建一个压缩包
+                    sh 'mkdir -p release'
                     sh 'ls -l temp_release'
                     sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C temp_release .'
 
