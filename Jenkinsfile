@@ -9,14 +9,6 @@ pipeline {
         GITHUB_REPO = 'https://wwwin-github.cisco.com/GX-GC-Automation-Dev-Team/cicd-poc' // 替换为实际的 GitHub 仓库地址
     }
     stages {
-        stage('checkout') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: main]],
-                        userRemoteConfigs: [[url: 'https://wwwin-github.cisco.com/GX-GC-Automation-Dev-Team/cicd-poc',
-                                            credentialsId: 'wwwin-personal-token']]
-                        ])
-                }
-        }
         stage('Verify Git Tag') {
             steps {
                 script {
