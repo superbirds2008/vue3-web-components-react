@@ -75,15 +75,15 @@ pipeline {
                     """, returnStdout: true).trim()
 
                     // 上传文件到 Release
-                    sh """
-                    curl -L \
-                        -X POST \
-                        -H "Accept: application/vnd.github+json" \
-                        -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-                        -H "Content-Type: application/gzip" \
-                        "https://wwwin-github.cisco.com/api/uploads/repos/GX-GC-Automation-Dev-Team/cicd-poc/releases/${releaseId}/assets?name=vue-web-component-${GIT_TAG}.tar.gz" \
-                        --data-binary "@release/vue-web-component-${GIT_TAG}.tar.gz"
-                    """
+                    // sh """
+                    // curl -L \
+                    //     -X POST \
+                    //     -H "Accept: application/vnd.github+json" \
+                    //     -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                    //     -H "Content-Type: application/gzip" \
+                    //     "https://wwwin-github.cisco.com/api/uploads/repos/GX-GC-Automation-Dev-Team/cicd-poc/releases/${releaseId}/assets?name=vue-web-component-${GIT_TAG}.tar.gz" \
+                    //     --data-binary "@release/vue-web-component-${GIT_TAG}.tar.gz"
+                    // """
                 }
             }
         }
