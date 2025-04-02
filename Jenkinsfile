@@ -36,10 +36,19 @@ pipeline {
                     sh "npm config set https-proxy ${NPM_PROXY}"
                     sh 'npm install'
                     sh 'npm run build'
+                    sh 'ls -l'
+                    sh 'ls -l dist/'
+                    sh 'pwd'
                 }
             }
         }
         stage('Upload Vue Release to GitHub') {
+            agent {
+                docker {
+                    image "node:20.18"
+                    args "-u root"
+                }
+            }
             steps {
                 script {
                     // 创建一个压缩包
