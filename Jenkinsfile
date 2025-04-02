@@ -36,10 +36,10 @@ pipeline {
                     sh "npm config set https-proxy ${NPM_PROXY}"
                     sh 'npm install'
                     sh 'npm run build'
-                    sh 'mkdir -p ../release'
-                    sh 'cp -r dist/* ../release/'
+                    sh 'mkdir -p ../temp_release'
+                    sh 'cp -r dist/* ../temp_release/'
                 }
-                stash includes: 'release/**', name: 'vue-release'
+                stash includes: 'temp_release/**', name: 'vue-release'
             }
         }
         stage('Upload Vue Release to GitHub') {
@@ -47,8 +47,8 @@ pipeline {
                 script {
                     unstash 'vue-release'
                     // 创建一个压缩包
-                    sh 'ls -l release'
-                    sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C release .'
+                    sh 'ls -l temp_release'
+                    sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C temp_release .'
 
                     // 上传到 GitHub Release
                     sh """
@@ -139,10 +139,10 @@ pipeline {
         //     }
         // }
     }
-    // post {
-    //     always {
-    //         // 清理工作区
-    //         cleanWs()
-    //     }
-    // }
+    post {
+        always {
+            // 清理工作区
+            cleanWs()
+        }
+    }
 }
