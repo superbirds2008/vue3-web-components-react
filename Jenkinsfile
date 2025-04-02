@@ -40,6 +40,7 @@ pipeline {
                     sh 'ls -l dist/'
                     sh 'pwd'
                 }
+                stash includes: 'dist/**', name: 'vue-dist'
             }
         }
         stage('Upload Vue Release to GitHub') {
@@ -51,9 +52,10 @@ pipeline {
             }
             steps {
                 script {
+                    unstash 'vue-dist'
                     // 创建一个压缩包
                     sh 'mkdir -p release'
-                    sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C vue-web-component/dist .'
+                    sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C dist .'
 
                     // 上传到 GitHub Release
                     sh """
