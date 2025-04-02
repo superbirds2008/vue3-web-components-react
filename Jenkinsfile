@@ -23,6 +23,12 @@ pipeline {
             }
         }
         stage('Build Vue Web Component') {
+            agent {
+                docker {
+                    image "node:20.18"
+                    args "-u root"
+                }
+            }
             steps {
                 dir('vue-web-component') {
                     // 安装依赖并构建
