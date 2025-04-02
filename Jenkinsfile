@@ -9,23 +9,14 @@ pipeline {
         GITHUB_REPO = 'https://wwwin-github.cisco.com/GX-GC-Automation-Dev-Team/cicd-poc' // 替换为实际的 GitHub 仓库地址
     }
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         // 检出代码
-        //         script {
-        //             // 自定义 checkout，确保拉取 tag 信息
-        //             checkout([
-        //                 $class: 'GitSCM',
-        //                 branches: [[name: '*/main']], // 替换为您的分支名称
-        //                 doGenerateSubmoduleConfigurations: false,
-        //                 extensions: [
-        //                     [$class: 'CloneOption', noTags: false, shallow: false, depth: 0] // 确保拉取所有 tag
-        //                 ],
-        //                 userRemoteConfigs: [[url: 'https://wwwin-github.cisco.com/GX-GC-Automation-Dev-Team/cicd-poc.git ']] // 替换为您的仓库地址
-        //             ])
-        //         }
-        //     }
-        // }
+        stage('checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: main]],
+                        userRemoteConfigs: [[url: 'https://wwwin-github.cisco.com/GX-GC-Automation-Dev-Team/cicd-poc',
+                                            credentialsId: 'wwwin-personal-token']]
+                        ])
+                }
+        }
         stage('Verify Git Tag') {
             steps {
                 script {
