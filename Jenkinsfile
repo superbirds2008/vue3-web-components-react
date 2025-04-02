@@ -43,12 +43,6 @@ pipeline {
             }
         }
         stage('Upload Vue Release to GitHub') {
-            agent {
-                docker {
-                    image "node:20.18"
-                    args "-u root"
-                }
-            }
             steps {
                 script {
                     unstash 'vue-release'
