@@ -39,46 +39,46 @@ pipeline {
                 }
             }
         }
-        // stage('Upload Vue Release to GitHub') {
-        //     steps {
-        //         script {
-        //             // 创建一个压缩包
-        //             sh 'mkdir -p release'
-        //             sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C vue-web-component/dist .'
+        stage('Upload Vue Release to GitHub') {
+            steps {
+                script {
+                    // 创建一个压缩包
+                    sh 'mkdir -p release'
+                    sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C vue-web-component/dist .'
 
-        //             // 上传到 GitHub Release
-        //             sh """
-        //             curl -H "Authorization: token ${GITHUB_TOKEN}" \
-        //                  -H "Content-Type: application/json" \
-        //                  -X POST \
-        //                  -d '{
-        //                      "tag_name": "${GIT_TAG}",
-        //                      "target_commitish": "main",
-        //                      "name": "${GIT_TAG}",
-        //                      "body": "Release for ${GIT_TAG}",
-        //                      "draft": false,
-        //                      "prerelease": false
-        //                  }' \
-        //                  https://api.github.com/repos/<your-username>/<your-repo>/releases
-        //             """
+                    // 上传到 GitHub Release
+                    sh """
+                    curl -H "Authorization: token ${GITHUB_TOKEN}" \
+                         -H "Content-Type: application/json" \
+                         -X POST \
+                         -d '{
+                             "tag_name": "${GIT_TAG}",
+                             "target_commitish": "main",
+                             "name": "${GIT_TAG}",
+                             "body": "Release for ${GIT_TAG}",
+                             "draft": false,
+                             "prerelease": false
+                         }' \
+                         ${GITHUB_REPO}/releases
+                    """
 
-        //             // 获取 Release ID
-        //             def releaseId = sh(script: """
-        //             curl -H "Authorization: token ${GITHUB_TOKEN}" \
-        //                  -H "Content-Type: application/json" \
-        //                  https://api.github.com/repos/<your-username>/<your-repo>/releases/tags/${GIT_TAG} | jq -r '.id'
-        //             """, returnStdout: true).trim()
+                    // 获取 Release ID
+                    def releaseId = sh(script: """
+                    curl -H "Authorization: token ${GITHUB_TOKEN}" \
+                         -H "Content-Type: application/json" \
+                         ${GITHUB_REPO}/releases/tags/${GIT_TAG} | jq -r '.id'
+                    """, returnStdout: true).trim()
 
-        //             // 上传文件到 Release
-        //             sh """
-        //             curl -H "Authorization: token ${GITHUB_TOKEN}" \
-        //                  -H "Content-Type: application/gzip" \
-        //                  --data-binary @release/vue-web-component-${GIT_TAG}.tar.gz \
-        //                  https://uploads.github.com/repos/<your-username>/<your-repo>/releases/${releaseId}/assets?name=vue-web-component-${GIT_TAG}.tar.gz
-        //             """
-        //         }
-        //     }
-        // }
+                    // 上传文件到 Release
+                    sh """
+                    curl -H "Authorization: token ${GITHUB_TOKEN}" \
+                         -H "Content-Type: application/gzip" \
+                         --data-binary @release/vue-web-component-${GIT_TAG}.tar.gz \
+                         ${GITHUB_REPO}/releases/${releaseId}/assets?name=vue-web-component-${GIT_TAG}.tar.gz
+                    """
+                }
+            }
+        }
         // stage('Build React App') {
         //     steps {
         //         dir('react-app') {
