@@ -88,13 +88,15 @@ pipeline {
             }
         }
         stage('Build and deploy React App') {
-            agent {
-                docker {
-                    image "node:20.18"
-                    args "-u root"
-                }
-            }
+            agent any
             stages{
+                agent {
+                    docker {
+                        image "node:20.18"
+                        args "-u root"
+                        reuseNode true
+                    }
+                }
                 stage('Build React App') {
                     steps {
                         dir('react-app') {
