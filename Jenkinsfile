@@ -129,12 +129,35 @@ pipeline {
                         }
                     }
                 }
-                // stage('Export Docker Image') {
-                //     steps {
-                //         // 导出 Docker 镜像为文件
-                //         sh "docker save -o ${DOCKER_IMAGE_FILE} ${DOCKER_IMAGE}"
-                //     }
-                // }
+                stage('Export Docker Image') {
+                    steps {
+                        // 导出 Docker 镜像为文件
+                        sh "docker save -o ${DOCKER_IMAGE_FILE} ${DOCKER_IMAGE}"
+                    }
+                }
+                stage('Transfer Docker Image to Test Server And Run') {
+                    steps {
+                        sshPublisher(
+                            publishers: [
+                                sshPublisherDesc(
+                                    configName: 'cxcicd-1', // Jenkins 中配置的服务器名称
+                                    transfers: [
+                                        sshTransfer(
+                                            sourceFiles: "${DOCKER_IMAGE_FILE}", // 本地文件路径（支持通配符）
+                                            remoteDirectory: '.',        // 远程目录（相对于配置的根目录）
+                                            execCommand: """
+                                                docker load -i ~/${DOCKER_IMAGE_FILE} &&
+                                                docker stop react-app || true &&
+                                                docker rm react-app || true &&
+                                                docker run -d --name react-app -p 5000:5000 ${DOCKER_IMAGE}
+                                            """                            // 远程执行的命令
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    }
+                }
                 // stage('Transfer Docker Image to Test Server') {
                 //     steps {
                 //         // 将导出的 Docker 镜像文件传输到测试服务器
