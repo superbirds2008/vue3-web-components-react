@@ -105,6 +105,8 @@ pipeline {
                             sh "npm config set https-proxy ${NPM_PROXY}"
                             sh 'npm install'
                             sh 'npm run build'
+                            sh 'ls -l .'
+                            sh 'pwd'
                         }
                     }
                 }
