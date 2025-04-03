@@ -88,16 +88,16 @@ pipeline {
             }
         }
         stage('Build and deploy React App') {
-            agent any
             stages{
-                agent {
-                    docker {
-                        image "node:20.18"
-                        args "-u root"
-                        reuseNode true
-                    }
-                }
+                agent any
                 stage('Build React App') {
+                    agent {
+                        docker {
+                            image "node:20.18"
+                            args "-u root"
+                            reuseNode true
+                        }
+                    }
                     steps {
                         dir('react-app') {
                             // 安装依赖并构建
