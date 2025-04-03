@@ -117,7 +117,7 @@ pipeline {
                             writeFile file: 'Dockerfile', text: '''
                             FROM node:20.18
                             WORKDIR /app
-                            COPY dist /app
+                            COPY build /app
                             RUN npm install -g serve
                             CMD ["serve", "-s", "."]
                             EXPOSE 5000
