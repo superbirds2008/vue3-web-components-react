@@ -87,61 +87,73 @@ pipeline {
                 }
             }
         }
-        // stage('Build React App') {
-        //     steps {
-        //         dir('react-app') {
-        //             // 安装依赖并构建
-        //             sh 'npm install'
-        //             sh 'npm run build'
-        //         }
-        //     }
-        // }
-        // stage('Build Docker Image') {
-        //     steps {
-        //         dir('react-app') {
-        //             // 创建一个简单的 npm web server Dockerfile
-        //             writeFile file: 'Dockerfile', text: '''
-        //             FROM node:16-alpine
-        //             WORKDIR /app
-        //             COPY dist /app
-        //             RUN npm install -g serve
-        //             CMD ["serve", "-s", "."]
-        //             EXPOSE 5000
-        //             '''
-        //             // 构建 Docker 镜像
-        //             sh "docker build -t ${DOCKER_IMAGE} ."
-        //         }
-        //     }
-        // }
-        // stage('Export Docker Image') {
-        //     steps {
-        //         // 导出 Docker 镜像为文件
-        //         sh "docker save -o ${DOCKER_IMAGE_FILE} ${DOCKER_IMAGE}"
-        //     }
-        // }
-        // stage('Transfer Docker Image to Test Server') {
-        //     steps {
-        //         // 将导出的 Docker 镜像文件传输到测试服务器
-        //         sshagent(['your-ssh-credentials-id']) {
-        //             sh "scp ${DOCKER_IMAGE_FILE} user@${TEST_SERVER}:/tmp/"
-        //         }
-        //     }
-        // }
-        // stage('Load and Run Docker Image on Test Server') {
-        //     steps {
-        //         // 在测试服务器上加载并运行 Docker 镜像
-        //         sshagent(['your-ssh-credentials-id']) {
-        //             sh """
-        //             ssh user@${TEST_SERVER} "
-        //                 docker load -i /tmp/${DOCKER_IMAGE_FILE} &&
-        //                 docker stop react-app || true &&
-        //                 docker rm react-app || true &&
-        //                 docker run -d --name react-app -p 5000:5000 ${DOCKER_IMAGE}
-        //             "
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Build and deploy React App') {
+            agent {
+                docker {
+                    image "node:20.18"
+                    args "-u root"
+                }
+            }
+            stages{
+                stage('Build React App') {
+                    steps {
+                        dir('react-app') {
+                            // 安装依赖并构建
+                            sh "npm config set proxy ${NPM_PROXY}"
+                            sh "npm config set https-proxy ${NPM_PROXY}"
+                            sh 'npm install'
+                            sh 'npm run build'
+                        }
+                    }
+                }
+                stage('Build Docker Image') {
+                    steps {
+                        dir('react-app') {
+                            // 创建一个简单的 npm web server Dockerfile
+                            writeFile file: 'Dockerfile', text: '''
+                            FROM node:20.18
+                            WORKDIR /app
+                            COPY dist /app
+                            RUN npm install -g serve
+                            CMD ["serve", "-s", "."]
+                            EXPOSE 5000
+                            '''
+                            // 构建 Docker 镜像
+                            sh "docker build -t ${DOCKER_IMAGE} ."
+                        }
+                    }
+                }
+                // stage('Export Docker Image') {
+                //     steps {
+                //         // 导出 Docker 镜像为文件
+                //         sh "docker save -o ${DOCKER_IMAGE_FILE} ${DOCKER_IMAGE}"
+                //     }
+                // }
+                // stage('Transfer Docker Image to Test Server') {
+                //     steps {
+                //         // 将导出的 Docker 镜像文件传输到测试服务器
+                //         sshagent(['your-ssh-credentials-id']) {
+                //             sh "scp ${DOCKER_IMAGE_FILE} user@${TEST_SERVER}:/tmp/"
+                //         }
+                //     }
+                // }
+                // stage('Load and Run Docker Image on Test Server') {
+                //     steps {
+                //         // 在测试服务器上加载并运行 Docker 镜像
+                //         sshagent(['your-ssh-credentials-id']) {
+                //             sh """
+                //             ssh user@${TEST_SERVER} "
+                //                 docker load -i /tmp/${DOCKER_IMAGE_FILE} &&
+                //                 docker stop react-app || true &&
+                //                 docker rm react-app || true &&
+                //                 docker run -d --name react-app -p 5000:5000 ${DOCKER_IMAGE}
+                //             "
+                //             """
+                //         }
+                //     }
+                // }
+            }
+        }
     }
     post {
         always {
