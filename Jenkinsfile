@@ -39,21 +39,14 @@ pipeline {
                     sh 'mkdir -p ../temp_release'
                     sh 'cp -r dist/* ../temp_release/'
                 }
-                // stash includes: 'temp_release/**', name: 'vue-release'
+                stash includes: 'temp_release/**', name: 'vue-release'
             }
         }
         stage('Upload Vue Release to GitHub') {
-            agent {
-                docker {
-                    image "node:20.18"
-                    args "-u root"
-                }
-            }
             steps {
                 script {
-                    // unstash 'vue-release'
+                    unstash 'vue-release'
                     // 创建一个压缩包
-                    sh 'apt install jq -y'
                     sh 'mkdir -p release'
                     sh 'ls -l temp_release'
                     sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C temp_release .'
