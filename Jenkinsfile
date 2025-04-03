@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image "node:20.18"
-            args "-u root"
-        }
-    }
+    agent any
     environment {
         DOCKER_IMAGE = 'react-app:latest' // 本地 Docker 镜像名称
         DOCKER_IMAGE_FILE = 'react-app.tar' // 导出的 Docker 镜像文件名
@@ -28,6 +23,12 @@ pipeline {
             }
         }
         stage('Build Vue Web Component') {
+            agent {
+                docker {
+                    image "node:20.18"
+                    args "-u root"
+                }
+            }
             steps {
                 dir('vue-web-component') {
                     // 安装依赖并构建
@@ -42,6 +43,12 @@ pipeline {
             }
         }
         stage('Upload Vue Release to GitHub') {
+            agent {
+                docker {
+                    image "node:20.18"
+                    args "-u root"
+                }
+            }
             steps {
                 script {
                     // unstash 'vue-release'
