@@ -27,6 +27,7 @@ pipeline {
                 docker {
                     image "node:20.18"
                     args "-u root"
+                    reuseNode true
                 }
             }
             steps {
@@ -39,13 +40,13 @@ pipeline {
                     sh 'mkdir -p ../temp_release'
                     sh 'cp -r dist/* ../temp_release/'
                 }
-                stash includes: 'temp_release/**', name: 'vue-release'
+                // stash includes: 'temp_release/**', name: 'vue-release'
             }
         }
         stage('Upload Vue Release to GitHub') {
             steps {
                 script {
-                    unstash 'vue-release'
+                    // unstash 'vue-release'
                     // 创建一个压缩包
                     sh 'mkdir -p release'
                     sh 'ls -l temp_release'
@@ -89,7 +90,6 @@ pipeline {
         }
         stage('Build and deploy React App') {
             stages{
-                agent any
                 stage('Build React App') {
                     agent {
                         docker {
