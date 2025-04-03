@@ -114,7 +114,7 @@ pipeline {
                     steps {
                         dir('react-app') {
                             // 创建一个简单的 npm web server Dockerfile
-                            writeFile file: 'Dockerfile', text: '''
+                            writeFile file: 'Dockerfile', text: """
                             FROM node:20.18
                             WORKDIR /app
                             COPY build /app
@@ -123,7 +123,7 @@ pipeline {
                             RUN npm install -g serve
                             CMD ["serve", "-s", "."]
                             EXPOSE 5000
-                            '''
+                            """
                             // 构建 Docker 镜像
                             sh "docker build -t ${DOCKER_IMAGE} ."
                         }
