@@ -121,7 +121,7 @@ pipeline {
                             RUN npm config set proxy ${NPM_PROXY}
                             RUN npm config set https-proxy ${NPM_PROXY}
                             RUN npm install -g serve
-                            CMD ["serve", "-s", "."]
+                            CMD ["serve", "-p", "5000", "-s", "."]
                             EXPOSE 5000
                             """
                             // 构建 Docker 镜像
