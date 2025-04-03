@@ -118,6 +118,8 @@ pipeline {
                             FROM node:20.18
                             WORKDIR /app
                             COPY build /app
+                            RUN npm config set proxy ${NPM_PROXY}
+                            RUN npm config set https-proxy ${NPM_PROXY}
                             RUN npm install -g serve
                             CMD ["serve", "-s", "."]
                             EXPOSE 5000
