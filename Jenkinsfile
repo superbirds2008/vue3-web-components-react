@@ -1,8 +1,9 @@
 pipeline {
-    agent any
-    options {
-        // 确保所有 stage 在同一个节点上执行
-        reuseNode true
+    agent {
+        docker {
+            image "node:20.18"
+            args "-u root"
+        }
     }
     environment {
         DOCKER_IMAGE = 'react-app:latest' // 本地 Docker 镜像名称
@@ -27,12 +28,6 @@ pipeline {
             }
         }
         stage('Build Vue Web Component') {
-            agent {
-                docker {
-                    image "node:20.18"
-                    args "-u root"
-                }
-            }
             steps {
                 dir('vue-web-component') {
                     // 安装依赖并构建
@@ -51,6 +46,7 @@ pipeline {
                 script {
                     // unstash 'vue-release'
                     // 创建一个压缩包
+                    sh 'apt install jq -y'
                     sh 'mkdir -p release'
                     sh 'ls -l temp_release'
                     sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C temp_release .'
