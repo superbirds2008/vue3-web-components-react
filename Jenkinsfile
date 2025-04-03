@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    options {
+        // 确保所有 stage 在同一个节点上执行
+        reuseNode true
+    }
     environment {
         DOCKER_IMAGE = 'react-app:latest' // 本地 Docker 镜像名称
         DOCKER_IMAGE_FILE = 'react-app.tar' // 导出的 Docker 镜像文件名
@@ -39,13 +43,13 @@ pipeline {
                     sh 'mkdir -p ../temp_release'
                     sh 'cp -r dist/* ../temp_release/'
                 }
-                stash includes: 'temp_release/**', name: 'vue-release'
+                // stash includes: 'temp_release/**', name: 'vue-release'
             }
         }
         stage('Upload Vue Release to GitHub') {
             steps {
                 script {
-                    unstash 'vue-release'
+                    // unstash 'vue-release'
                     // 创建一个压缩包
                     sh 'mkdir -p release'
                     sh 'ls -l temp_release'
