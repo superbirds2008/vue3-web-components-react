@@ -4,7 +4,8 @@
 
 - 实现Vue3组件与React的互操作，使用`vue-custom-element`将Vue组件转换为Web组件，然后在React中使用。测试了vue组件与react组件的互操作，vue组件可以接收react传递的props，react组件也可以接收vue传递的event。
 - 在react中使用单元测试和集成测试，分别使用test和react-testing-library进行测试。
-- 进行前端测试，使用`playwright`进行端到端测试。
+- 进行前端测试，使用`playwright`进行端到端测试, 分别测chrome、firefox和webkit浏览器。
+- 使用`npm run test:all`命令进行全面测试，包含单元测试、集成测试和端到端测试。
 ## 目录结构
 ```
 ├── react-app
@@ -42,9 +43,10 @@ npm run start
 cd react-app
 npm run test
 ```
-# 5. 启动playwright进行端到端测试
+# 5.安装并启动playwright二进制文件进行端到端测试
 ```bash
 cd react-app
+npx playwright install
 npm run start
 npm run test:playwright 
 ```
