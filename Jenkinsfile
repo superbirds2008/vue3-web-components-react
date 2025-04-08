@@ -3,10 +3,10 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'react-app:latest' // 本地 Docker 镜像名称
         DOCKER_IMAGE_FILE = 'react-app.tar' // 导出的 Docker 镜像文件名
-        TEST_SERVER = 'your-test-server' // 替换为测试服务器地址
+        TEST_SERVER = 'cx-cicd1' // 替换为测试服务器地址
         GITHUB_TOKEN = credentials('wwwin-github-1') // GitHub 访问令牌 
         NPM_PROXY = 'http://proxy.esl.cisco.com:80' // 替换为实际的 npm 代理地址
-        GITHUB_REPO = 'https://wwwin-github.cisco.com/api/v3/repos/GX-GC-Automation-Dev-Team/cicd-poc' // 替换为实际的 GitHub 仓库地址
+        GITHUB_REPO = 'https://wwwin-github.cisco.com/api/v3/repos/CX-GC-Automation-Dev-Team/cicd-poc' // 替换为实际的 GitHub 仓库地址
     }
     stages {
         stage('Verify Git Tag') {
@@ -82,7 +82,7 @@ pipeline {
                         -H "Accept: application/vnd.github+json" \
                         -H "Authorization: Bearer ${GITHUB_TOKEN}" \
                         -H "Content-Type: application/gzip" \
-                        "https://wwwin-github.cisco.com/api/uploads/repos/GX-GC-Automation-Dev-Team/cicd-poc/releases/${releaseId}/assets?name=vue-web-component-${GIT_TAG}.tar.gz" \
+                        "https://wwwin-github.cisco.com/api/uploads/repos/CX-GC-Automation-Dev-Team/cicd-poc/releases/${releaseId}/assets?name=vue-web-component-${GIT_TAG}.tar.gz" \
                         --data-binary "@release/vue-web-component-${GIT_TAG}.tar.gz"
                     """
                 }
@@ -103,6 +103,7 @@ pipeline {
                             // 安装依赖并构建
                             sh "npm config set proxy ${NPM_PROXY}"
                             sh "npm config set https-proxy ${NPM_PROXY}"
+                            sh "npm install"
                             sh 'npm run lint'
                         }
                     }
@@ -122,8 +123,6 @@ pipeline {
                             sh "npm config set https-proxy ${NPM_PROXY}"
                             sh 'npm install'
                             sh 'npm run build'
-                            sh 'ls -l .'
-                            sh 'pwd'
                         }
                     }
                 }
@@ -157,7 +156,7 @@ pipeline {
                         sshPublisher(
                             publishers: [
                                 sshPublisherDesc(
-                                    configName: 'cxcicd-1', // Jenkins 中配置的服务器名称
+                                    configName: '${TEST_SERVER}', // Jenkins 中配置的服务器名称
                                     transfers: [
                                         sshTransfer(
                                             sourceFiles: "${DOCKER_IMAGE_FILE}", // 本地文件路径（支持通配符）
@@ -175,29 +174,6 @@ pipeline {
                         )
                     }
                 }
-                // stage('Transfer Docker Image to Test Server') {
-                //     steps {
-                //         // 将导出的 Docker 镜像文件传输到测试服务器
-                //         sshagent(['your-ssh-credentials-id']) {
-                //             sh "scp ${DOCKER_IMAGE_FILE} user@${TEST_SERVER}:/tmp/"
-                //         }
-                //     }
-                // }
-                // stage('Load and Run Docker Image on Test Server') {
-                //     steps {
-                //         // 在测试服务器上加载并运行 Docker 镜像
-                //         sshagent(['your-ssh-credentials-id']) {
-                //             sh """
-                //             ssh user@${TEST_SERVER} "
-                //                 docker load -i /tmp/${DOCKER_IMAGE_FILE} &&
-                //                 docker stop react-app || true &&
-                //                 docker rm react-app || true &&
-                //                 docker run -d --name react-app -p 5000:5000 ${DOCKER_IMAGE}
-                //             "
-                //             """
-                //         }
-                //     }
-                // }
             }
         }
     }
