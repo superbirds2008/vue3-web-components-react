@@ -90,6 +90,23 @@ pipeline {
         }
         stage('Build and deploy React App') {
             stages{
+                stage('Run React lint') {
+                    agent {
+                        docker {
+                            image "node:20.18"
+                            args "-u root"
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        dir('react-app') {
+                            // 安装依赖并构建
+                            sh "npm config set proxy ${NPM_PROXY}"
+                            sh "npm config set https-proxy ${NPM_PROXY}"
+                            sh 'npm run lint'
+                        }
+                    }
+                }
                 stage('Build React App') {
                     agent {
                         docker {
