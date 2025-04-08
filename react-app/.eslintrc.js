@@ -15,6 +15,8 @@ module.exports = {
     plugins: ["react"],
     extends: ["react-app", "react-app/jest"],
     rules: {
+      "testing-library/no-container": "off",
+      "testing-library/no-node-access": "off",
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "capitalized-comments": ["warn", "always"],
