@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 test('renders my-vue-component with correct message', () => {
   const { container } = render(<App />);
-  const vueComponent = container.querySelector('my-vue-component');
+  const vueComponent = screen.getByTestId('my-vue-component');
   expect(vueComponent).toHaveAttribute('message', '从 React 传递的默认值');
 });
 
