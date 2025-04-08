@@ -19,40 +19,94 @@
 │   └── ...
 └── README.md
 ```
+1. 对react项目进行lint检查
+```bash
+cd react-app
+npm run lint 
+```
+检查出的告警示例
+```
+/Users/pengzhan/Documents/Documents/Dev/vue3-web-components-react/react-app/src/App.js
+  1:8  warning  'React' is defined but never used  no-unused-vars
 
-# 1. 打包vue组件
+/Users/pengzhan/Documents/Documents/Dev/vue3-web-components-react/react-app/src/App.test.js
+   6:1  warning  'test' is not defined    no-undef
+   9:3  warning  'expect' is not defined  no-undef
+  12:1  warning  'test' is not defined    no-undef
+  23:3  warning  'expect' is not defined  no-undef
+  26:1  warning  'test' is not defined    no-undef
+  42:5  warning  'expect' is not defined  no-undef
+
+/Users/pengzhan/Documents/Documents/Dev/vue3-web-components-react/react-app/src/index.js
+  15:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+  16:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+
+/Users/pengzhan/Documents/Documents/Dev/vue3-web-components-react/react-app/src/setupTests.js
+  1:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+  2:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+  3:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+  4:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+
+✖ 13 problems (0 errors, 13 warnings)
+  0 errors and 6 warnings potentially fixable with the `--fix` option.
+
+PENGZHAN-M-6YNY:react-app pengzhan$ npm run lint
+
+> react-app@0.1.0 lint
+> npx eslint src
+
+
+/Users/pengzhan/Documents/Documents/Dev/vue3-web-components-react/react-app/src/App.js
+  1:8  warning  'React' is defined but never used  no-unused-vars
+
+/Users/pengzhan/Documents/Documents/Dev/vue3-web-components-react/react-app/src/App.test.js
+   6:1  warning  'test' is not defined    no-undef
+   9:3  warning  'expect' is not defined  no-undef
+  12:1  warning  'test' is not defined    no-undef
+  23:3  warning  'expect' is not defined  no-undef
+  26:1  warning  'test' is not defined    no-undef
+  42:5  warning  'expect' is not defined  no-undef
+
+/Users/pengzhan/Documents/Documents/Dev/vue3-web-components-react/react-app/src/index.js
+  15:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+  16:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+
+/Users/pengzhan/Documents/Documents/Dev/vue3-web-components-react/react-app/src/setupTests.js
+  1:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+  2:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+  3:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+  4:1  warning  Comments should not begin with a lowercase character  capitalized-comments
+```
+
+2. 打包vue组件
 ```bash
 cd vue-web-component
 npm install
 npm run build
 ```
 脚本会自动把打包好的组件放到react-app项目的`public`目录下
-# 2. 打包react组件
+
+3. 打包react组件
 ```bash
 cd react-app
 npm install
 ```
-# 3. 启动react项目进行测试
-```bash
-cd react-app
-npm run start
-```
 
-# 4. 启动react项目进行测试
+4. 启动react项目进行测试
 ```bash
 cd react-app
 npm run test
+
 ```
-# 5.安装并启动playwright二进制文件进行端到端测试
+5. 安装并启动playwright二进制文件进行端到端测试
 ```bash
 cd react-app
 npx playwright install
 npm run start
 npm run test:playwright 
 ```
-# 6. 启动全面测试
+6. 启动全面测试
 ```bash
 cd react-app
 npm run start
 npm run test:all
-```

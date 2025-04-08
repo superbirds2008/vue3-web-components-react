@@ -11,6 +11,9 @@ export default [
       globals: globals.browser,
       parser: babelParser,
       parserOptions: {
+        babelOptions: {
+          presets: ["@babel/preset-react"]
+        },
         ecmaVersion: 2021,
         sourceType: "module",
         ecmaFeatures: {
@@ -35,6 +38,15 @@ export default [
       "react/jsx-uses-vars": "warn",
       "react/prop-types": "off",
       "capitalized-comments": ["warn", "always"],
+      "no-undef": "warn",
+      "no-unused-vars": [
+        "warn",
+        {
+          vars: "all",
+          args: "after-used",
+          ignoreRestSiblings: true,
+        },
+      ],
     },
     settings: {
       react: {
