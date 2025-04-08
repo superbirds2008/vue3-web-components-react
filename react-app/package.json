@@ -19,7 +19,7 @@
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
     "test:playwright": "playwright test playwright-test-list",
-    "test:all": "react-scripts test --watchAll=false && BROWSER=none start-server-and-test start http://localhost:3000 test:playwright" 
+    "test:all": "react-scripts test --watchAll=false && BROWSER=none start-server-and-test start http://localhost:3000 test:playwright"
   },
   "eslintConfig": {
     "extends": [
@@ -40,7 +40,14 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/eslint-parser": "^7.27.0",
+    "@eslint/js": "^9.24.0",
     "@playwright/test": "^1.51.1",
-    "playwright": "^1.51.1"
+    "eslint": "^9.24.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.0.0",
+    "playwright": "^1.51.1",
+    "start-server-and-test": "^2.0.11"
   }
 }
