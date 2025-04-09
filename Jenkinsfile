@@ -122,58 +122,58 @@ pipeline {
                             sh "npm config set proxy ${NPM_PROXY}"
                             sh "npm config set https-proxy ${NPM_PROXY}"
                             sh 'npm install'
-                            sh 'npm run build'
+                            sh 'npm run test'
                         }
                     }
                 }
-                stage('Build Docker Image') {
-                    steps {
-                        dir('react-app') {
-                            // 创建一个简单的 npm web server Dockerfile
-                            writeFile file: 'Dockerfile', text: """
-                            FROM node:20.18
-                            WORKDIR /app
-                            COPY build /app
-                            RUN npm config set proxy ${NPM_PROXY}
-                            RUN npm config set https-proxy ${NPM_PROXY}
-                            RUN npm install -g serve
-                            CMD ["serve", "-p", "5000", "-s", "."]
-                            EXPOSE 5000
-                            """
-                            // 构建 Docker 镜像
-                            sh "docker build -t ${DOCKER_IMAGE} ."
-                        }
-                    }
-                }
-                stage('Export Docker Image') {
-                    steps {
-                        // 导出 Docker 镜像为文件
-                        sh "docker save -o ${DOCKER_IMAGE_FILE} ${DOCKER_IMAGE}"
-                    }
-                }
-                stage('Transfer Docker Image to Test Server And Run') {
-                    steps {
-                        sshPublisher(
-                            publishers: [
-                                sshPublisherDesc(
-                                    configName: '${TEST_SERVER}', // Jenkins 中配置的服务器名称
-                                    transfers: [
-                                        sshTransfer(
-                                            sourceFiles: "${DOCKER_IMAGE_FILE}", // 本地文件路径（支持通配符）
-                                            remoteDirectory: '.',        // 远程目录（相对于配置的根目录）
-                                            execCommand: """
-                                                docker load -i ~/${DOCKER_IMAGE_FILE} &&
-                                                docker stop react-app || true &&
-                                                docker rm react-app || true &&
-                                                docker run -d --name react-app -p 5000:5000 ${DOCKER_IMAGE}
-                                            """                            // 远程执行的命令
-                                        )
-                                    ]
-                                )
-                            ]
-                        )
-                    }
-                }
+                // stage('Build Docker Image') {
+                //     steps {
+                //         dir('react-app') {
+                //             // 创建一个简单的 npm web server Dockerfile
+                //             writeFile file: 'Dockerfile', text: """
+                //             FROM node:20.18
+                //             WORKDIR /app
+                //             COPY build /app
+                //             RUN npm config set proxy ${NPM_PROXY}
+                //             RUN npm config set https-proxy ${NPM_PROXY}
+                //             RUN npm install -g serve
+                //             CMD ["serve", "-p", "5000", "-s", "."]
+                //             EXPOSE 5000
+                //             """
+                //             // 构建 Docker 镜像
+                //             sh "docker build -t ${DOCKER_IMAGE} ."
+                //         }
+                //     }
+                // }
+                // stage('Export Docker Image') {
+                //     steps {
+                //         // 导出 Docker 镜像为文件
+                //         sh "docker save -o ${DOCKER_IMAGE_FILE} ${DOCKER_IMAGE}"
+                //     }
+                // }
+                // stage('Transfer Docker Image to Test Server And Run') {
+                //     steps {
+                //         sshPublisher(
+                //             publishers: [
+                //                 sshPublisherDesc(
+                //                     configName: '${TEST_SERVER}', // Jenkins 中配置的服务器名称
+                //                     transfers: [
+                //                         sshTransfer(
+                //                             sourceFiles: "${DOCKER_IMAGE_FILE}", // 本地文件路径（支持通配符）
+                //                             remoteDirectory: '.',        // 远程目录（相对于配置的根目录）
+                //                             execCommand: """
+                //                                 docker load -i ~/${DOCKER_IMAGE_FILE} &&
+                //                                 docker stop react-app || true &&
+                //                                 docker rm react-app || true &&
+                //                                 docker run -d --name react-app -p 5000:5000 ${DOCKER_IMAGE}
+                //                             """                            // 远程执行的命令
+                //                         )
+                //                     ]
+                //                 )
+                //             ]
+                //         )
+                //     }
+                // }
             }
         }
     }
