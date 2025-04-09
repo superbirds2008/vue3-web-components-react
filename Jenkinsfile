@@ -122,7 +122,6 @@ pipeline {
                             sh "npm config set proxy ${NPM_PROXY}"
                             sh "npm config set https-proxy ${NPM_PROXY}"
                             sh 'npm install'
-                            sh 'npm i eslint-config-react-app'
                             sh 'npm run build'
                         }
                     }
