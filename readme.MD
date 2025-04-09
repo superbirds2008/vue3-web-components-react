@@ -29,7 +29,7 @@
    npm run build
    ```
 
-1. 对react项目进行lint检查
+1. 对react项目进行lint检查, 配置和规则文件为[.eslintrc.js](/react-app/.eslintrc.js)
       ```bash
       cd react-app
       npm install
