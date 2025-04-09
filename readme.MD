@@ -59,7 +59,7 @@ npm run lint
   4:1  warning  Comments should not begin with a lowercase character  capitalized-comments
 ```
 
-3. 启动react项目进行测试
+3. 启动react项目进单元测试
 ```bash
 cd react-app
 npm run test
@@ -69,14 +69,12 @@ npm run test
 ```bash
 cd react-app
 npx playwright install
-npm run start
 npm run test:playwright 
 ```
 
 5. 启动全面测试
 ```bash
 cd react-app
-npm run start
 npm run test:all
 ```
 
