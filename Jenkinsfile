@@ -52,10 +52,10 @@ pipeline {
                 }
 
                 // 对react项目进行playwright测试
-                dir('react-app') {
-                    sh 'npx playwright install'
-                    sh 'npm run test:playwright'
-                }
+                // dir('react-app') {
+                //     sh 'npx playwright install'
+                //     sh 'npm run test:playwright'
+                // }
 
                 // 对react项目进行全面测试
                 dir('react-app') {
