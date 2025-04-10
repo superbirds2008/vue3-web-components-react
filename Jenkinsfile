@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'react-app:latest' // 本地 Docker 镜像名称
         DOCKER_IMAGE_FILE = 'react-app.tar' // 导出的 Docker 镜像文件名
-        TEST_SERVER = 'cx-cicd1' // 替换为测试服务器地址
+        TEST_SERVER = 'cxcicd-1' // 替换为测试服务器地址
         GITHUB_TOKEN = credentials('wwwin-github-1') // GitHub 访问令牌 
         NPM_PROXY = 'http://proxy.esl.cisco.com:80' // 替换为实际的 npm 代理地址
         GITHUB_REPO = 'https://wwwin-github.cisco.com/api/v3/repos/CX-GC-Automation-Dev-Team/cicd-poc' // 替换为实际的 GitHub 仓库地址
