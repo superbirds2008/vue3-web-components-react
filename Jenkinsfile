@@ -25,7 +25,7 @@ pipeline {
         stage('Test and Build') {
             agent {
                 docker {
-                    image "node:20.18"
+                    image "jacoblincool/playwright:all"
                     args "-u root"
                     reuseNode true
                 }
