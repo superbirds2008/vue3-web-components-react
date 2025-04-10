@@ -22,7 +22,7 @@ pipeline {
                 }
             }
         }
-        stage('Build and Test') {
+        stage('Test and Build') {
             agent {
                 docker {
                     image "jacoblincool/playwright:all"
@@ -67,6 +67,31 @@ pipeline {
                     sh 'ls -l'
                     sh 'ls -l public'
                 }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                dir('react-app') {
+                    // 创建一个简单的 npm web server Dockerfile
+                    writeFile file: 'Dockerfile', text: """
+                    FROM node:20.18
+                    WORKDIR /app
+                    COPY public /app
+                    RUN npm config set proxy ${NPM_PROXY}
+                    RUN npm config set https-proxy ${NPM_PROXY}
+                    RUN npm install -g serve
+                    CMD ["serve", "-p", "5000", "-s", "."]
+                    EXPOSE 5000
+                    """
+                    // 构建 Docker 镜像
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                }
+            }
+        }
+        stage('Export Docker Image') {
+            steps {
+                // 导出 Docker 镜像为文件
+                sh "docker save -o ${DOCKER_IMAGE_FILE} ${DOCKER_IMAGE}"
             }
         }
     }
