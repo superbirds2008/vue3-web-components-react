@@ -63,7 +63,7 @@ pipeline {
 
                 // 对react项目进行打包
                 dir('react-app') {
-                    sh 'npm run build'
+                    sh 'CI=false npm run build'
                     sh 'ls -l'
                     sh 'ls -l public'
                 }
