@@ -41,23 +41,23 @@ pipeline {
                 }
 
                 // 对react项目进行lint检查
-                dir('vue-web-component') {
+                dir('react-app') {
                     sh "npm install"
                     sh 'npm run lint'
                 }
 
                 // 对react项目进行单元测试
-                dir('vue-web-component') {
+                dir('react-app') {
                     sh 'npm run test'
                 }
 
                 // 对react项目进行playwright测试
-                dir('vue-web-component') {
+                dir('react-app') {
                     sh 'npm run test:playwright'
                 }
 
                 // 对react项目进行全面测试
-                dir('vue-web-component') {
+                dir('react-app') {
                     sh 'npm run test:all'
                 }
             }
