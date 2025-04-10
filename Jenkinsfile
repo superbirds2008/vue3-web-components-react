@@ -25,7 +25,7 @@ pipeline {
         stage('Test and Build') {
             agent {
                 docker {
-                    image "jacoblincool/playwright:all"
+                    image "node:20.18"
                     args "-u root"
                     reuseNode true
                 }
@@ -105,9 +105,10 @@ pipeline {
                                     sourceFiles: "${DOCKER_IMAGE_FILE}", // 本地文件路径（支持通配符）
                                     remoteDirectory: '.',        // 远程目录（相对于配置的根目录）
                                     execCommand: """
-                                        docker load -i ~/${DOCKER_IMAGE_FILE} &&
                                         docker stop react-app || true &&
                                         docker rm react-app || true &&
+                                        docker rmi ${DOCKER_IMAGE} || true &&  // 删除旧的镜像
+                                        docker load -i ~/${DOCKER_IMAGE_FILE} &&
                                         docker run -d --name react-app -p 5000:5000 ${DOCKER_IMAGE}
                                     """                            // 远程执行的命令
                                 )
