@@ -76,7 +76,7 @@ pipeline {
                     writeFile file: 'Dockerfile', text: """
                     FROM node:20.18
                     WORKDIR /app
-                    COPY public /app
+                    COPY build /app
                     RUN npm config set proxy ${NPM_PROXY}
                     RUN npm config set https-proxy ${NPM_PROXY}
                     RUN npm install -g serve
