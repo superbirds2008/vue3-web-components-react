@@ -99,7 +99,7 @@ pipeline {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
-                            configName: '${TEST_SERVER}', // Jenkins 中配置的服务器名称
+                            configName: "${TEST_SERVER}", // Jenkins 中配置的服务器名称
                             transfers: [
                                 sshTransfer(
                                     sourceFiles: "${DOCKER_IMAGE_FILE}", // 本地文件路径（支持通配符）
