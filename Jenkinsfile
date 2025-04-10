@@ -140,6 +140,7 @@ pipeline {
                             sh "npm config set proxy ${NPM_PROXY}"
                             sh "npm config set https-proxy ${NPM_PROXY}"
                             sh 'npm install'
+                            sh 'npx playwright install'
                             sh 'npm run test:playwright'
                         }
                     }
@@ -158,7 +159,6 @@ pipeline {
                             sh "npm config set proxy ${NPM_PROXY}"
                             sh "npm config set https-proxy ${NPM_PROXY}"
                             sh 'npm install'
-                            sh 'npx playwright install'
                             sh 'npm run test:all'
                         }
                     }
