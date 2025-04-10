@@ -135,6 +135,13 @@ pipeline {
                         }
                     }
                     steps {
+                        dir('vue-web-component') {
+                            // 在 vue-web-component 目录中执行命令
+                            sh "npm config set proxy ${NPM_PROXY}"
+                            sh "npm config set https-proxy ${NPM_PROXY}"
+                            sh 'npm install'
+                            sh 'npm run build'
+                        }
                         dir('react-app') {
                             // 安装依赖并构建
                             sh "npm config set proxy ${NPM_PROXY}"
