@@ -22,221 +22,44 @@ pipeline {
                 }
             }
         }
-        stage('Build Vue Web Component') {
+        stage('Build and Test') {
             agent {
                 docker {
-                    image "node:20.18"
+                    image "jacoblincool/playwright:all"
                     args "-u root"
                     reuseNode true
                 }
             }
             steps {
+                // 打包vue组件
                 dir('vue-web-component') {
                     // 安装依赖并构建
                     sh "npm config set proxy ${NPM_PROXY}"
                     sh "npm config set https-proxy ${NPM_PROXY}"
                     sh 'npm install'
                     sh 'npm run build'
-                    sh 'mkdir -p ../temp_release'
-                    sh 'cp -r dist/* ../temp_release/'
                 }
-                // stash includes: 'temp_release/**', name: 'vue-release'
-            }
-        }
-        stage('Upload Vue Release to GitHub') {
-            steps {
-                script {
-                    // unstash 'vue-release'
-                    // 创建一个压缩包
-                    sh 'mkdir -p release'
-                    sh 'ls -l temp_release'
-                    sh 'tar -czf release/vue-web-component-${GIT_TAG}.tar.gz -C temp_release .'
 
-                    // 上传到 GitHub Release
-                    sh """
-                    curl -H "Authorization: token ${GITHUB_TOKEN}" \
-                         -H "Content-Type: application/json" \
-                         -X POST \
-                         -d '{
-                             "tag_name": "${GIT_TAG}",
-                             "target_commitish": "main",
-                             "name": "${GIT_TAG}",
-                             "body": "Release for ${GIT_TAG}",
-                             "draft": false,
-                             "prerelease": false
-                         }' \
-                         ${GITHUB_REPO}/releases
-                    """
+                // 对react项目进行lint检查
+                dir('vue-web-component') {
+                    sh "npm install"
+                    sh 'npm run lint'
+                }
 
-                    // 获取 Release ID
-                    def releaseId = sh(script: """
-                    curl -H "Authorization: token ${GITHUB_TOKEN}" \
-                         -H "Content-Type: application/json" \
-                         ${GITHUB_REPO}/releases/tags/${GIT_TAG} | jq -r '.id'
-                    """, returnStdout: true).trim()
+                // 对react项目进行单元测试
+                dir('vue-web-component') {
+                    sh 'npm run test'
+                }
 
-                    // 上传文件到 Release
-                    sh """
-                    curl -L \
-                        -X POST \
-                        -H "Accept: application/vnd.github+json" \
-                        -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-                        -H "Content-Type: application/gzip" \
-                        "https://wwwin-github.cisco.com/api/uploads/repos/CX-GC-Automation-Dev-Team/cicd-poc/releases/${releaseId}/assets?name=vue-web-component-${GIT_TAG}.tar.gz" \
-                        --data-binary "@release/vue-web-component-${GIT_TAG}.tar.gz"
-                    """
+                // 对react项目进行playwright测试
+                dir('vue-web-component') {
+                    sh 'npm run test:playwright'
                 }
-            }
-        }
-        stage('Build and deploy React App') {
-            stages{
-                stage('Run React lint') {
-                    agent {
-                        docker {
-                            image "node:20.18"
-                            args "-u root"
-                            reuseNode true
-                        }
-                    }
-                    steps {
-                        dir('react-app') {
-                            // 安装依赖并构建
-                            sh "npm config set proxy ${NPM_PROXY}"
-                            sh "npm config set https-proxy ${NPM_PROXY}"
-                            sh "npm install"
-                            sh 'npm run lint'
-                        }
-                    }
+
+                // 对react项目进行全面测试
+                dir('vue-web-component') {
+                    sh 'npm run test:all'
                 }
-                stage('Build React App and test') {
-                    agent {
-                        docker {
-                            image "node:20.18"
-                            args "-u root"
-                            reuseNode true
-                        }
-                    }
-                    steps {
-                        dir('react-app') {
-                            // 安装依赖并构建
-                            sh "npm config set proxy ${NPM_PROXY}"
-                            sh "npm config set https-proxy ${NPM_PROXY}"
-                            sh 'npm install'
-                            sh 'npm run test'
-                        }
-                    }
-                }
-                stage('Do playwrigh test for react app') {
-                    agent {
-                        docker {
-                            image "jacoblincool/playwright:all"
-                            args "-u root"
-                            reuseNode true
-                        }
-                    }
-                    steps {
-                        dir('vue-web-component') {
-                            // 在 vue-web-component 目录中执行命令
-                            sh "npm config set proxy ${NPM_PROXY}"
-                            sh "npm config set https-proxy ${NPM_PROXY}"
-                            sh 'npm install'
-                            sh 'npm run build'
-                        }
-                        dir('react-app') {
-                            // 安装依赖并构建
-                            sh "npm config set proxy ${NPM_PROXY}"
-                            sh "npm config set https-proxy ${NPM_PROXY}"
-                            sh 'npm install'
-                            sh 'npm run test:playwright'
-                        }
-                    }
-                }
-                stage('Do full test for react app') {
-                    agent {
-                        docker {
-                            image "node:20.18"
-                            args "-u root"
-                            reuseNode true
-                        }
-                    }
-                    steps {
-                        dir('react-app') {
-                            // 安装依赖并构建
-                            sh "npm config set proxy ${NPM_PROXY}"
-                            sh "npm config set https-proxy ${NPM_PROXY}"
-                            sh 'npm install'
-                            sh 'npm run test:all'
-                        }
-                    }
-                }
-                stage('Build react app') {
-                    agent {
-                        docker {
-                            image "node:20.18"
-                            args "-u root"
-                            reuseNode true
-                        }
-                    }
-                    steps {
-                        dir('react-app') {
-                            // 安装依赖并构建
-                            sh "npm config set proxy ${NPM_PROXY}"
-                            sh "npm config set https-proxy ${NPM_PROXY}"
-                            sh 'npm install'
-                            sh 'npm run build'
-                            sh 'pwd'
-                            sh 'ls -l'
-                        }
-                    }
-                }
-                // stage('Build Docker Image') {
-                //     steps {
-                //         dir('react-app') {
-                //             // 创建一个简单的 npm web server Dockerfile
-                //             writeFile file: 'Dockerfile', text: """
-                //             FROM node:20.18
-                //             WORKDIR /app
-                //             COPY build /app
-                //             RUN npm config set proxy ${NPM_PROXY}
-                //             RUN npm config set https-proxy ${NPM_PROXY}
-                //             RUN npm install -g serve
-                //             CMD ["serve", "-p", "5000", "-s", "."]
-                //             EXPOSE 5000
-                //             """
-                //             // 构建 Docker 镜像
-                //             sh "docker build -t ${DOCKER_IMAGE} ."
-                //         }
-                //     }
-                // }
-                // stage('Export Docker Image') {
-                //     steps {
-                //         // 导出 Docker 镜像为文件
-                //         sh "docker save -o ${DOCKER_IMAGE_FILE} ${DOCKER_IMAGE}"
-                //     }
-                // }
-                // stage('Transfer Docker Image to Test Server And Run') {
-                //     steps {
-                //         sshPublisher(
-                //             publishers: [
-                //                 sshPublisherDesc(
-                //                     configName: '${TEST_SERVER}', // Jenkins 中配置的服务器名称
-                //                     transfers: [
-                //                         sshTransfer(
-                //                             sourceFiles: "${DOCKER_IMAGE_FILE}", // 本地文件路径（支持通配符）
-                //                             remoteDirectory: '.',        // 远程目录（相对于配置的根目录）
-                //                             execCommand: """
-                //                                 docker load -i ~/${DOCKER_IMAGE_FILE} &&
-                //                                 docker stop react-app || true &&
-                //                                 docker rm react-app || true &&
-                //                                 docker run -d --name react-app -p 5000:5000 ${DOCKER_IMAGE}
-                //                             """                            // 远程执行的命令
-                //                         )
-                //                     ]
-                //                 )
-                //             ]
-                //         )
-                //     }
-                // }
             }
         }
     }
