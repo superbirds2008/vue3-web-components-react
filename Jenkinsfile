@@ -126,6 +126,63 @@ pipeline {
                         }
                     }
                 }
+                stage('Do playwrigh test for react app') {
+                    agent {
+                        docker {
+                            image "node:20.18"
+                            args "-u root"
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        dir('react-app') {
+                            // 安装依赖并构建
+                            sh "npm config set proxy ${NPM_PROXY}"
+                            sh "npm config set https-proxy ${NPM_PROXY}"
+                            sh 'npm install'
+                            sh 'npm run test:playwright'
+                        }
+                    }
+                }
+                stage('Do full test for react app') {
+                    agent {
+                        docker {
+                            image "node:20.18"
+                            args "-u root"
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        dir('react-app') {
+                            // 安装依赖并构建
+                            sh "npm config set proxy ${NPM_PROXY}"
+                            sh "npm config set https-proxy ${NPM_PROXY}"
+                            sh 'npm install'
+                            sh 'npx playwright install'
+                            sh 'npm run test:all'
+                        }
+                    }
+                }
+                stage('Build react app') {
+                    agent {
+                        docker {
+                            image "node:20.18"
+                            args "-u root"
+                            reuseNode true
+                        }
+                    }
+                    steps {
+                        dir('react-app') {
+                            // 安装依赖并构建
+                            sh "npm config set proxy ${NPM_PROXY}"
+                            sh "npm config set https-proxy ${NPM_PROXY}"
+                            sh 'npm install'
+                            sh 'npm run build'
+                            sh 'pwd'
+                            sh 'ls -l'
+                        }
+                    }
+                }
                 // stage('Build Docker Image') {
                 //     steps {
                 //         dir('react-app') {
