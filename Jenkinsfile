@@ -129,7 +129,7 @@ pipeline {
                 stage('Do playwrigh test for react app') {
                     agent {
                         docker {
-                            image "node:20.18"
+                            image "jacoblincool/playwright:all"
                             args "-u root"
                             reuseNode true
                         }
@@ -140,7 +140,6 @@ pipeline {
                             sh "npm config set proxy ${NPM_PROXY}"
                             sh "npm config set https-proxy ${NPM_PROXY}"
                             sh 'npm install'
-                            sh 'npx playwright install'
                             sh 'npm run test:playwright'
                         }
                     }
