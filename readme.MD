@@ -85,6 +85,6 @@
       cd react-app
       npm run build 
       ```
-      脚本会自动把打包好的组件放到react-app项目的`public`目录下
+      脚本会自动把打包好的组件放到react-app项目的`build`目录下
 
 1. 将react组件打包好的文件连通http服务器打包成镜像部署到demo服务器并启动镜像
