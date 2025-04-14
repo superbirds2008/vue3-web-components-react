@@ -61,13 +61,13 @@
         4:1  warning  Comments should not begin with a lowercase character  capitalized-comments
       ```
 
-1. 启动react项目进单元测试, 配置和规则文件为[.eslintrc.js](/react-app/.eslintrc.js)
+1. 启动react项目进单元测试, 测试脚本存放在[App.test.js](/react-app/src/App.test.js)和[setupTests.js](react-app/src/setupTests.js)中
       ```bash
       cd react-app
       npm run test
       ```
 
-1. 安装playwrigh和3种浏览器内核，启动react项目进行端到端测试, 分别测chrome、firefox和webkit浏览器的兼容性, 配置文件为[playwright.config.js](/react-app/playwright.config.js)，测试脚本在目录```/react-app/playwright-test-list```
+1. 安装playwrigh和3种浏览器内核，启动react项目进行端到端测试, 分别测chrome、firefox和webkit浏览器的兼容性, 配置文件为[playwright.config.js](/react-app/playwright.config.js)，测试脚本在目录[App.playwright.test.js](/react-app/playwright-test-list/App.playwright.test.js)
       ```bash
       cd react-app
       npx playwright install
