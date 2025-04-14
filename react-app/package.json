@@ -20,7 +20,7 @@
     "lint": "npx eslint src",
     "eject": "react-scripts eject",
     "test:playwrightcli": "playwright test playwright-test-list",
-    "test:playwright": "BROWSER=none start-server-and-test start http://0.0.0.0:3000 test:playwrightcli",
+    "test:playwright": "BROWSER=none start-server-and-test start tcp:3000 test:playwrightcli",
     "test:all": "npm run test && npm run test:playwright"
   },
   "eslintConfig": {
