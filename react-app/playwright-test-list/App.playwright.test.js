@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('App Component', () => {
   test('renders my-vue-component with correct message', async ({ page }) => {
     // 启动应用
-    await page.goto('http://localhost:3000');
+    await page.goto('http://127.0.0.1:3000');
 
     // 获取 Vue 组件
     const vueComponent = await page.locator('my-vue-component');
@@ -14,7 +14,7 @@ test.describe('App Component', () => {
 
   test('updates message when React button is clicked', async ({ page }) => {
     // 启动应用
-    await page.goto('http://localhost:3000');
+    await page.goto('http://127.0.0.1:3000');
 
     // 点击按钮
     await page.click('button:has-text("更新消息")');
@@ -26,7 +26,7 @@ test.describe('App Component', () => {
 
   test('handles button click inside my-vue-component', async ({ page }) => {
     // 启动应用
-    await page.goto('http://localhost:3000');
+    await page.goto('http://127.0.0.1:3000');
 
     // 获取 Vue 组件
     const vueComponent = await page.locator('my-vue-component');
