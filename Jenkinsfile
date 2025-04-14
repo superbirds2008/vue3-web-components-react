@@ -59,9 +59,9 @@ pipeline {
                 }
 
                 // 对react项目进行全面测试
-                // dir('react-app') {
-                //     sh 'npm run test:all'
-                // }
+                dir('react-app') {
+                    sh 'npm run test:all'
+                }
 
                 // 对react项目进行打包
                 dir('react-app') {
