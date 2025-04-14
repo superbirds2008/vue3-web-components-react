@@ -16,6 +16,8 @@ pipeline {
                     def gitTag = sh(script: "git describe --tags --exact-match || echo ''", returnStdout: true).trim()
                     if (!gitTag.startsWith('v')) {
                         error "This pipeline only runs for tags starting with 'v'. Current tag: '${gitTag}'"
+                        currentBuild.result = 'SUCCESS' // 设置构建结果为成功
+                        return
                     }
                     echo "Triggered by tag: ${gitTag}"
                     env.GIT_TAG = gitTag // 将 Git tag 存储到环境变量中
@@ -51,10 +53,10 @@ pipeline {
                     sh 'npm run test'
                 }
 
-                // 对react项目进行playwright测试
-                // dir('react-app') {
-                //     sh 'npm run test:playwright'
-                // }
+                对react项目进行playwright测试
+                dir('react-app') {
+                    sh 'npm run test:playwright'
+                }
 
                 // 对react项目进行全面测试
                 // dir('react-app') {
