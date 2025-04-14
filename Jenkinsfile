@@ -53,7 +53,7 @@ pipeline {
                     sh 'npm run test'
                 }
 
-                对react项目进行playwright测试
+                // 对react项目进行playwright测试
                 dir('react-app') {
                     sh 'npm run test:playwright'
                 }
